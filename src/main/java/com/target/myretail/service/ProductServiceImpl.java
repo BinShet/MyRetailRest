@@ -94,12 +94,12 @@ public class ProductServiceImpl implements ProductService {
                     		+ apiEndpointExcl,
                             HttpMethod.GET, null, JsonNode.class);
             
-            logger.info("JSON Response from Remote Client  :" + response);            
+            logger.debug("JSON Response from Remote Client  :" + response);            
         } catch (RestClientException e) {
-			logger.info("Product API unavailable  :" + apiEndpointURL + productId);
+			logger.debug("Product API unavailable  :" + apiEndpointURL + productId);
 			throw new MyRetailException(HttpStatus.NOT_FOUND.value() ,"Product Remote API unavailable");
 		} catch (Exception e) {
-        	logger.info("Exception in getRemoteProductName ");
+        	logger.debug("Exception in getRemoteProductName ");
             e.printStackTrace();
         }
 		
