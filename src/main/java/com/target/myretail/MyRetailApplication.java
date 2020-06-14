@@ -4,11 +4,7 @@ package com.target.myretail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.target.myretail.entity.CurrentPriceEntity;
 import com.target.myretail.entity.ProductDetailEntity;
@@ -16,10 +12,6 @@ import com.target.myretail.repository.ProductRepository;
 
 
 @SpringBootApplication
-@EnableAutoConfiguration
-@Configuration
-@ComponentScan(basePackages={"com.target.myretail.*","ProductDetailController","ProductService"})
-@EnableMongoRepositories("com.target.myretail.repository")
 public class MyRetailApplication implements CommandLineRunner {
 	
 	@Autowired
