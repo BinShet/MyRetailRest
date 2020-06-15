@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.target.myretail.controller.ProductDetailController;
 import com.target.myretail.service.ProductService;
 import com.target.myretail.vo.response.CurrentPriceVO;
@@ -57,7 +58,31 @@ public class MyRetailApplicationTests {
 
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 
-
+	}
+	
+	@Test
+	public void putProductDetailsTest() throws Exception {
+		
+		ProductVO product = new ProductVO();
+		CurrentPriceVO currentPrice = new CurrentPriceVO();
+		
+		product.setProductId(new Long(13860428));
+		product.setName("The Big Lebowski (Blu-ray)");
+		currentPrice.setCurrencyCode("USD");
+		currentPrice.setValue(9999.49);
+		product.setCurrentprice(currentPrice);
+		
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/products/13860428")				
+                .content(new ObjectMapper().writeValueAsString(product))
+                .contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON_VALUE);
+		
+		MvcResult result =  mvc.perform(requestBuilder).andReturn();
+		
+		String expected = "{ \"statusCode\": 200, \"message\": \"Update Successful\" }";
+		
+		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+		
 	}
 
 }
