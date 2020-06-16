@@ -1,7 +1,5 @@
 package com.target.myretail.service;
 
-import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,20 +61,21 @@ public class ProductServiceImpl implements ProductService {
 	public void updateProductById(ProductVO productVO) throws MyRetailException {
 		
 		logger.debug("In Product Service--updateProductById");
-		Optional<ProductDetailEntity> productDetailEntity = productRepository.findById(productVO.getProductId());
-		if(!productDetailEntity.isPresent()) {
+		
+		if(productRepository.existsById(productVO.getProductId())) {
+			ProductDetailEntity product =prodMapper.getProductRepObject(productVO);			
+			try {
+				productRepository.save(product);
+			} catch (Exception exception) {
+				logger.debug("Error while updating product ");
+				throw new MyRetailException(HttpStatus.SERVICE_UNAVAILABLE.value(),"Product Update Failed");
+			}
+		} else {
 			logger.debug("Product Not Found in DB while doing update ");
 			throw new MyRetailException(HttpStatus.NOT_FOUND.value(),"Product not found for update");
 		}
 		
-		ProductDetailEntity product =prodMapper.getProductRepObject(productVO);
 		
-		try {
-			productRepository.save(product);
-		} catch (Exception exception) {
-			logger.debug("Error while updating product ");
-			throw new MyRetailException(HttpStatus.SERVICE_UNAVAILABLE.value(),"Product Update Failed");
-		}
 	}
 	
 
