@@ -62,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		logger.debug("In Product Service--updateProductById");
 		
-		if(productRepository.existsById(productVO.getProductId())) {
+		if(productRepository.existsById(productVO.getProductId()) && validateInput(productVO)   ) {
 			ProductDetailEntity product =prodMapper.getProductRepObject(productVO);			
 			try {
 				productRepository.save(product);
@@ -78,6 +78,25 @@ public class ProductServiceImpl implements ProductService {
 		
 	}
 	
+
+	private boolean validateInput(ProductVO productVO) throws MyRetailException{
+		if(null == productVO.getCurrentprice()) { 
+			throw new MyRetailException(HttpStatus.BAD_REQUEST.value(),"Current Price Invalid - Product not updated");			
+		}
+		
+		if(null == productVO.getCurrentprice().getValue()) {
+			throw new MyRetailException(HttpStatus.BAD_REQUEST.value(),
+					"Current Price -Value Invalid - Product not updated");
+		}
+		
+		if(null == productVO.getCurrentprice().getCurrencyCode() 
+				|| productVO.getCurrentprice().getCurrencyCode().isEmpty()) {
+			throw new MyRetailException(HttpStatus.BAD_REQUEST.value(),
+					"Current Price -Currency Code Invalid - Product not updated");
+		}
+		return true;
+	}
+
 
 	private String getRemoteProductName(Long productId) throws MyRetailException {
 		
