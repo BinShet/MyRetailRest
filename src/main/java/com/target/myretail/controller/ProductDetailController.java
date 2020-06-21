@@ -31,25 +31,31 @@ public class ProductDetailController {
 	
 	@RequestMapping(value = "/{id}",method=RequestMethod.GET,produces=MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductVO> getProductById(@PathVariable("id") Long productId) throws MyRetailException
-    {
+    {		
+		long startTime = System.nanoTime();
 		ProductVO productvo = new ProductVO();
 		productvo = productService.getProductById(productId);
-		
+		long endTime = System.nanoTime();
+		logger.info(" GET Service Response -- time in ms" + ((endTime-startTime)/1000000));
 		logger.debug(" Product Response " + productvo.toString());
 		return new ResponseEntity<ProductVO>(productvo, HttpStatus.OK);
     }
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces =MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProductResponse> updatePrice(@RequestBody ProductVO product,
 			@PathVariable("id") Long productId) throws MyRetailException {
 		
-		if (!(product.getProductId().equals(productId))) {
+		long startTime = System.nanoTime();
+		if (null== product.getProductId()  ||
+				(!(product.getProductId().equals(productId)))) {
 			logger.debug("ProductId in URL "+productId+ " product id in body " + product.getProductId() );
 			throw new MyRetailException(HttpStatus.BAD_REQUEST.value(),"Product Id in URL and JSON mismatch");
 		}
 		
 		productService.updateProductById(product);
 		ProductResponse pr = new ProductResponse(HttpStatus.OK.value(), "Update Successful");
+		long endTime = System.nanoTime();
+		logger.info(" PUT Service Response -- time in ms" + ((endTime-startTime)/1000000));
 		return new ResponseEntity<ProductResponse>(pr, HttpStatus.OK);
 	}
 	
